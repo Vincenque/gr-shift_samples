@@ -1,10 +1,3 @@
-/* -*- c++ -*- */
-/*
- * Copyright 2024 gr-shift_samples_module author.
- *
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
-
 #include "shift_samples_impl.h"
 #include <gnuradio/io_signature.h>
 

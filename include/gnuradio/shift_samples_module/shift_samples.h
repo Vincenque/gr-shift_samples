@@ -1,10 +1,3 @@
-/* -*- c++ -*- */
-/*
- * Copyright 2024 gr-shift_samples_module author.
- *
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
-
 #ifndef INCLUDED_SHIFT_SAMPLES_MODULE_SHIFT_SAMPLES_H
 #define INCLUDED_SHIFT_SAMPLES_MODULE_SHIFT_SAMPLES_H
 
