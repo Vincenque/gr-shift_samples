@@ -9,4 +9,8 @@
 
  static const char *__doc_gr_shift_samples_module_shift_samples_make = R"doc()doc";
 
-  
+
+ static const char *__doc_gr_shift_samples_module_shift_samples_number_of_samples_to_shift = R"doc()doc";
+
+
+ static const char *__doc_gr_shift_samples_module_shift_samples_set_number_of_samples_to_shift = R"doc()doc";

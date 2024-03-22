@@ -19,14 +19,22 @@ public:
 
     /*!
      * \brief Return a shared_ptr to a new instance of
-     * shift_samples_module::shift_samples.
+     * shift_samples_module::number_of_samples_to_shift.
      *
-     * To avoid accidental use of raw pointers, shift_samples_module::shift_samples's
-     * constructor is in a private implementation
-     * class. shift_samples_module::shift_samples::make is the public interface for
-     * creating new instances.
+     * \param itemsize Size of item
+     * \param number_of_samples_to_shift Number os samples to shift
      */
-    static sptr make(int shift_value = 0);
+    static sptr make(size_t itemsize, int number_of_samples_to_shift);
+
+    /*!
+     * \brief Set the sample shift
+     *
+     * This method allows you to dynamically change the number_of_samples_to_shift of the block.
+     *
+     * \param number_of_samples_to_shift The new number_of_samples_to_shift
+     */
+    virtual void set_number_of_samples_to_shift(int number_of_samples_to_shift) = 0;
+    virtual int number_of_samples_to_shift() const = 0;
 };
 
 } // namespace shift_samples_module

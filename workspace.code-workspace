@@ -1,3 +1,9 @@
 {
-	"folders": []
+	"folders": [],
+	"settings": {
+		"files.associations": {
+			"string": "cpp",
+			"complex": "cpp"
+		}
+	}
 }

@@ -4,44 +4,34 @@
 namespace gr {
 namespace shift_samples_module {
 
-#pragma message("set the following appropriately and remove this warning")
-using input_type = float;
-#pragma message("set the following appropriately and remove this warning")
-using output_type = float;
-shift_samples::sptr shift_samples::make(int shift_value)
+shift_samples::sptr shift_samples::make(size_t itemsize, int number_of_samples_to_shift = 0)
 {
-    return gnuradio::make_block_sptr<shift_samples_impl>(shift_value);
+    return gnuradio::make_block_sptr<shift_samples_impl>(itemsize, number_of_samples_to_shift);
 }
 
-
-/*
- * The private constructor
- */
-shift_samples_impl::shift_samples_impl(int shift_value)
+shift_samples_impl::shift_samples_impl(size_t itemsize, int number_of_samples_to_shift = 0)
     : gr::sync_block("shift_samples",
                      gr::io_signature::make(
-                         1 /* min inputs */, 1 /* max inputs */, sizeof(input_type)),
+                         1 /* min inputs */, 1 /* max inputs */, itemsize),
                      gr::io_signature::make(
-                         1 /* min outputs */, 1 /*max outputs */, sizeof(output_type)))
+                         1 /* min outputs */, 1 /*max outputs */, itemsize)),
+      d_itemsize(itemsize),
+      d_number_of_samples_to_shift(number_of_samples_to_shift)
 {
 }
 
-/*
- * Our virtual destructor.
- */
 shift_samples_impl::~shift_samples_impl() {}
 
 int shift_samples_impl::work(int noutput_items,
                              gr_vector_const_void_star& input_items,
                              gr_vector_void_star& output_items)
 {
-    auto in = static_cast<const input_type*>(input_items[0]);
-    auto out = static_cast<output_type*>(output_items[0]);
+    const char* iptr;
+    char* optr;
+    iptr = (const char*)input_items[0];
+    optr = (char*)output_items[0];
+    std::memcpy(optr, iptr, noutput_items * d_itemsize);
 
-#pragma message("Implement the signal processing in your block and remove this warning")
-    // Do <+signal processing+>
-
-    // Tell runtime system how many output items we produced.
     return noutput_items;
 }
 
