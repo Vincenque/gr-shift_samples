@@ -1,0 +1,7 @@
+build
+.clang-format
+.conda/
+__pycache__/
+*.py
+*.dat
+*.bin
