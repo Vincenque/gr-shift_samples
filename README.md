@@ -1,6 +1,7 @@
 # gr-shift_samples
-Simple GNU Radio block to shift samples. 
-If samples are pushed out from buffer, they are going to the start of buffer.
+Simple GNU Radio block to shift samples in vector. 
+If samples are pushed out of vector, they are going to the other side.
+Shifts can be both positive (shift right) and negative (shift left).
 
 Tested on GNU Radio Companion 3.10.7.0 (Python 3.10.12).
 
