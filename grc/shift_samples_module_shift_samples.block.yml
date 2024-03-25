@@ -1,3 +1,4 @@
+# shift_samples_module_shift_samples.block.yml
 id: shift_samples_module_shift_samples
 label: Shift Samples
 category: '[Custom Modules]'
@@ -12,21 +13,29 @@ parameters:
 -   id: number_of_samples_to_shift
     label: Number of samples to shift
     dtype: int
-    default: '0'        
+    default: '0'   
+-   id: vlen
+    label: Vector Length
+    dtype: int
+    default: '1' 
 
 inputs:
 -   domain: stream
     dtype: ${ type }
-    vlen: 1
+    vlen: ${ vlen }
 outputs:
 -   domain: stream
     dtype: ${ type }
-    vlen: 1
+    vlen: ${ vlen }
+
+asserts:
+- ${ vlen > 0 }
+
 
 templates:
   imports: from gnuradio import shift_samples_module
   make: |-
-    shift_samples_module.shift_samples(${type.size}, ${number_of_samples_to_shift})
+    shift_samples_module.shift_samples(${type.size}, ${vlen}, ${number_of_samples_to_shift})
     self.${id}.set_number_of_samples_to_shift(${number_of_samples_to_shift})
   callbacks:
   - set_number_of_samples_to_shift(${number_of_samples_to_shift})
@@ -36,7 +45,7 @@ cpp_templates:
     includes: ['#include <gnuradio/shift_samples_module/shift_samples.h>']
     declarations: 'shift_samples_module::shift_samples::sptr ${id};'
     make: |-
-      this->${id} = shift_samples_module::shift_samples::make(${type.size}, ${number_of_samples_to_shift});
+      this->${id} = shift_samples_module::shift_samples::make(${type.size}, ${vlen}, ${number_of_samples_to_shift});
       self->${id}.set_number_of_samples_to_shift(${number_of_samples_to_shift})
     callbacks:
     - set_number_of_samples_to_shift(${number_of_samples_to_shift})

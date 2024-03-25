@@ -17,7 +17,8 @@ void bind_shift_samples(py::module& m)
                gr::basic_block,
                std::shared_ptr<shift_samples>>(m, "shift_samples", D(shift_samples))
         .def(py::init(&shift_samples::make),
-             py::arg("itemsize"),
+             py::arg("type_size"),
+             py::arg("vector_length"),
              py::arg("number_of_samples_to_shift"),
              D(shift_samples, make))
         .def("set_number_of_samples_to_shift",

@@ -1,3 +1,4 @@
+// shift_samples.h
 #ifndef INCLUDED_SHIFT_SAMPLES_MODULE_SHIFT_SAMPLES_H
 #define INCLUDED_SHIFT_SAMPLES_MODULE_SHIFT_SAMPLES_H
 
@@ -21,15 +22,17 @@ public:
      * \brief Return a shared_ptr to a new instance of
      * shift_samples_module::number_of_samples_to_shift.
      *
-     * \param itemsize Size of item
+     * \param type_size Size of type of data
+     * \param vector_length Size of vector
      * \param number_of_samples_to_shift Number os samples to shift
      */
-    static sptr make(size_t itemsize, int number_of_samples_to_shift);
+    static sptr make(size_t type_size, int vector_length, int number_of_samples_to_shift);
 
     /*!
      * \brief Set the sample shift
      *
-     * This method allows you to dynamically change the number_of_samples_to_shift of the block.
+     * This method allows you to dynamically change the number_of_samples_to_shift of the
+     * block.
      *
      * \param number_of_samples_to_shift The new number_of_samples_to_shift
      */

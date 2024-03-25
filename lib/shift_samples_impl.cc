@@ -1,22 +1,31 @@
+// shift_samples_impl.cc
 #include "shift_samples_impl.h"
 #include <gnuradio/io_signature.h>
+#include <vector>
 
 namespace gr {
 namespace shift_samples_module {
 
-shift_samples::sptr shift_samples::make(size_t itemsize, int number_of_samples_to_shift = 0)
+shift_samples::sptr shift_samples::make(size_t type_size,
+                                        int vector_length,
+                                        int number_of_samples_to_shift = 0)
 {
-    return gnuradio::make_block_sptr<shift_samples_impl>(itemsize, number_of_samples_to_shift);
+    return gnuradio::make_block_sptr<shift_samples_impl>(
+        type_size, vector_length, number_of_samples_to_shift);
 }
 
-shift_samples_impl::shift_samples_impl(size_t itemsize, int number_of_samples_to_shift = 0)
-    : gr::sync_block("shift_samples",
-                     gr::io_signature::make(
-                         1 /* min inputs */, 1 /* max inputs */, itemsize),
-                     gr::io_signature::make(
-                         1 /* min outputs */, 1 /*max outputs */, itemsize)),
-      d_itemsize(itemsize),
-      d_number_of_samples_to_shift(number_of_samples_to_shift)
+shift_samples_impl::shift_samples_impl(size_t type_size,
+                                       int vector_length,
+                                       int number_of_samples_to_shift = 0)
+    : gr::sync_block(
+          "shift_samples",
+          gr::io_signature::make(
+              1 /* min inputs */, 1 /* max inputs */, type_size * vector_length),
+          gr::io_signature::make(
+              1 /* min outputs */, 1 /*max outputs */, type_size * vector_length)),
+      d_type_size(type_size),
+      d_number_of_samples_to_shift(number_of_samples_to_shift),
+      d_vector_length(vector_length)
 {
 }
 
@@ -26,39 +35,35 @@ int shift_samples_impl::work(int noutput_items,
                              gr_vector_const_void_star& input_items,
                              gr_vector_void_star& output_items)
 {
-    const char* iptr;
-    char* optr;
-    iptr = (const char*)input_items[0];
-    optr = (char*)output_items[0];
+    const char* in = (const char*)input_items[0];
+    char* out = (char*)output_items[0];
 
-    // Calculate the absolute shift value with modulo operation
-    int shift_value = std::abs(d_number_of_samples_to_shift) % noutput_items;
+    int effective_shift_samples = d_number_of_samples_to_shift % d_vector_length;
+    if (effective_shift_samples < 0) {
+        effective_shift_samples = effective_shift_samples + d_vector_length;
+    }
+    int shift_bytes = effective_shift_samples * d_type_size;
 
-    // Create a temporary buffer to hold the data
-    char* temp_buffer = new char[noutput_items * d_itemsize];
-
-    // Copy the input data to the temporary buffer
-    std::memcpy(temp_buffer, iptr, noutput_items * d_itemsize);
-
-    if (d_number_of_samples_to_shift > 0) {
-        // Right shift
-        // Copy the shifted samples to the output
-        std::memcpy(optr, temp_buffer + shift_value * d_itemsize, (noutput_items - shift_value) * d_itemsize);
-        // Move the remaining samples to the front
-        std::memcpy(optr + (noutput_items - shift_value) * d_itemsize, temp_buffer, shift_value * d_itemsize);
+    // If the shift is zero, simply copy the input vector to the output vector
+    if (d_number_of_samples_to_shift == 0) {
+        std::memcpy(out, in, noutput_items * d_type_size * d_vector_length);
     } else {
-        // Left shift
-        // Copy the shifted samples to the output
-        std::memcpy(optr, temp_buffer + (noutput_items - shift_value) * d_itemsize, shift_value * d_itemsize);
-        // Move the remaining samples to the end
-        std::memcpy(optr + shift_value * d_itemsize, temp_buffer, (noutput_items - shift_value) * d_itemsize);
+        // Shift the samples in the buffer
+        std::memmove(out,
+                     in + shift_bytes,
+                     (noutput_items * d_type_size * d_vector_length) - shift_bytes);
+
+        // Copy the remaining samples from the end of the input buffer to the beginning of
+        // the output buffer
+        std::memcpy(out + ((noutput_items * d_type_size * d_vector_length) - shift_bytes),
+                    in,
+                    shift_bytes);
     }
 
-    // Delete the temporary buffer
-    delete[] temp_buffer;
-
+    // Tell runtime system how many output items we produced.
     return noutput_items;
 }
+
 
 } /* namespace shift_samples_module */
 } /* namespace gr */
