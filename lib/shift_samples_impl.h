@@ -14,14 +14,20 @@ private:
     int d_number_of_samples_to_shift;
     int d_vector_length;
 
-        public : shift_samples_impl(size_t type_size, int vector_length, int number_of_samples_to_shift);
+public:
+    shift_samples_impl(size_t type_size,
+                       int vector_length,
+                       int number_of_samples_to_shift);
     ~shift_samples_impl();
 
     void set_number_of_samples_to_shift(int number_of_samples_to_shift) override
     {
         d_number_of_samples_to_shift = number_of_samples_to_shift;
     }
-    int number_of_samples_to_shift() const override { return d_number_of_samples_to_shift; }
+    int number_of_samples_to_shift() const override
+    {
+        return d_number_of_samples_to_shift;
+    }
 
     int work(int noutput_items,
              gr_vector_const_void_star& input_items,

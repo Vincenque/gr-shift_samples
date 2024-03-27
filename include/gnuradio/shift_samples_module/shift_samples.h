@@ -9,7 +9,7 @@ namespace gr {
 namespace shift_samples_module {
 
 /*!
- * \brief <+description of block+>
+ * \brief This class represents a block that shifts samples in a GNU Radio flowgraph.
  * \ingroup shift_samples_module
  *
  */
@@ -20,21 +20,22 @@ public:
 
     /*!
      * \brief Return a shared_ptr to a new instance of
-     * shift_samples_module::number_of_samples_to_shift.
+     * shift_samples_module::shift_samples.
      *
-     * \param type_size Size of type of data
-     * \param vector_length Size of vector
-     * \param number_of_samples_to_shift Number os samples to shift
+     * \param type_size The size of each data item in bytes.
+     * \param vector_length The length of the vectors that the block will process.
+     * \param number_of_samples_to_shift The number of samples by which to shift the input
+     * data.
      */
     static sptr make(size_t type_size, int vector_length, int number_of_samples_to_shift);
 
     /*!
-     * \brief Set the sample shift
+     * \brief Set the sample shift.
      *
-     * This method allows you to dynamically change the number_of_samples_to_shift of the
-     * block.
+     * This method allows you to dynamically change the number of samples by which the
+     * input data is shifted.
      *
-     * \param number_of_samples_to_shift The new number_of_samples_to_shift
+     * \param number_of_samples_to_shift The new number of samples to shift.
      */
     virtual void set_number_of_samples_to_shift(int number_of_samples_to_shift) = 0;
     virtual int number_of_samples_to_shift() const = 0;

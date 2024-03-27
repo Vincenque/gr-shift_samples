@@ -5,20 +5,14 @@ Shifts can be both positive (shift right) and negative (shift left).
 
 Tested on GNU Radio Companion 3.10.7.0 (Python 3.10.12).
 
-To build and test:
+To build or rebuild and test (in terminal):
 ```
-mkdir build 
-cd build 
-cmake .. 
-make -j4 
-sudo make install 
-sudo ldconfig
-gnuradio-companion ../examples/testShiftSamples.grc
+sh rebuild.sh
 ```
-
-
-To rebuild (in build folder) and test:
+or:
 ```
+mkdir build
+cd build
 sudo make uninstall
 cd ..
 sudo rm -r build
